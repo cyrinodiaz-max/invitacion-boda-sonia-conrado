@@ -7,27 +7,39 @@ export default async function handler(req, res) {
 
   try {
     const GSHEET_ID = process.env.GSHEET_ID;
-    const GSHEET_CLIENT_EMAIL = process.env.GSHEET_CLIENT_EMAIL;
-    const GSHEET_PRIVATE_KEY = process.env.GSHEET_PRIVATE_KEY;
+    const GOOGLE_SERVICE_ACCOUNT_BASE64 =
+      process.env.GOOGLE_SERVICE_ACCOUNT_BASE64;
 
     if (!GSHEET_ID) throw new Error("Falta GSHEET_ID");
-    if (!GSHEET_CLIENT_EMAIL) throw new Error("Falta GSHEET_CLIENT_EMAIL");
-    if (!GSHEET_PRIVATE_KEY) throw new Error("Falta GSHEET_PRIVATE_KEY");
+    if (!GOOGLE_SERVICE_ACCOUNT_BASE64) {
+      throw new Error("Falta GOOGLE_SERVICE_ACCOUNT_BASE64");
+    }
 
-    const data = req.body;
+    const serviceAccountJson = Buffer.from(
+      GOOGLE_SERVICE_ACCOUNT_BASE64,
+      "base64"
+    ).toString("utf8");
 
-    const auth = new google.auth.JWT({
-      email: GSHEET_CLIENT_EMAIL,
-      key: GSHEET_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    const credentials = JSON.parse(serviceAccountJson);
+
+    const auth = new google.auth.GoogleAuth({
+      credentials,
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
 
-    await auth.authorize();
+    const client = await auth.getClient();
 
-    const sheets = google.sheets({ version: "v4", auth });
+    const sheets = google.sheets({
+      version: "v4",
+      auth: client,
+    });
+
+    const data = req.body;
 
     const totalAsistentes =
-      data.asiste === "Sí" ? 1 + Number(data.cantidadAcompanantes || 0) : 0;
+      data.asiste === "Sí"
+        ? 1 + Number(data.cantidadAcompanantes || 0)
+        : 0;
 
     const row = [
       new Date().toISOString(),
