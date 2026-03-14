@@ -3,69 +3,59 @@ import { useMemo, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { weddingContent } from "../lib/content";
 
-const initialState = {
-  titular: "",
-  asiste: "Sí",
-  tieneAcompanantes: "No",
-  cantidadAcompanantes: 0,
-  cantidadMenores: 0,
-  acompanante1: "",
-  acompanante2: "",
-  acompanante3: "",
-  telefono: "",
-  mensaje: "",
-};
-
-export default function RSVPSection() {
-  const [form, setForm] = useState(initialState);
+export default function RSVPSection({
+  inviteData,
+  inviteLoading,
+  inviteError,
+}) {
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const companionCount = useMemo(
-    () => Number(form.cantidadAcompanantes || 0),
-    [form.cantidadAcompanantes]
-  );
+  const [titularAsiste, setTitularAsiste] = useState("Sí");
+  const [acomp1Asiste, setAcomp1Asiste] = useState("Sí");
+  const [acomp2Asiste, setAcomp2Asiste] = useState("Sí");
+  const [acomp3Asiste, setAcomp3Asiste] = useState("Sí");
+  const [mensaje, setMensaje] = useState("");
 
-  const setField = (key, value) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const acompanantes = useMemo(() => {
+    return inviteData?.acompanantes || [];
+  }, [inviteData]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (sending) return;
+    if (sending || !inviteData) return;
 
     setSending(true);
 
     try {
-      const response = await fetch("/api/rsvp", {
+      const payload = {
+        id: inviteData.id,
+        titular_asiste: titularAsiste,
+        acomp1_asiste: acompanantes[0] ? acomp1Asiste : "",
+        acomp2_asiste: acompanantes[1] ? acomp2Asiste : "",
+        acomp3_asiste: acompanantes[2] ? acomp3Asiste : "",
+        mensaje,
+      };
+
+      const response = await fetch("/api/respond", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
-      let result = null;
-      const contentType = response.headers.get("content-type") || "";
-
-      if (contentType.includes("application/json")) {
-        result = await response.json();
-      } else {
-        const text = await response.text();
-        result = { message: text };
-      }
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          result?.message || result?.error || "No se pudo enviar la confirmación."
-        );
+        throw new Error(result.error || "No se pudo registrar la respuesta.");
       }
 
       setSuccess(true);
-      setForm(initialState);
     } catch (error) {
-      console.error("Error RSVP:", error);
-      alert(error.message || "No se pudo enviar la confirmación.");
+      console.error("Error RSVP personalizado:", error);
+      alert(error.message || "No se pudo registrar la respuesta.");
     } finally {
       setSending(false);
     }
@@ -85,35 +75,53 @@ export default function RSVPSection() {
             {weddingContent.rsvp.title}
           </h3>
 
-          {!success && (
-            <p className="mx-auto mt-4 max-w-3xl text-white/75">
-              {weddingContent.rsvp.description}
-            </p>
-          )}
+          <p className="mx-auto mt-4 max-w-3xl text-white/75">
+            {weddingContent.rsvp.description}
+          </p>
         </div>
 
         <AnimatePresence mode="wait">
-          {success ? (
+          {inviteLoading ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mx-auto mt-10 max-w-2xl text-center text-white/75"
+            >
+              Cargando invitación...
+            </motion.div>
+          ) : inviteError ? (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mx-auto mt-10 max-w-2xl rounded-3xl border border-red-400/30 bg-red-950/30 p-6 text-center text-red-200"
+            >
+              {inviteError}
+            </motion.div>
+          ) : inviteData?.estado?.toLowerCase() === "respondido" ? (
+            <motion.div
+              key="already-answered"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mx-auto mt-10 max-w-xl rounded-3xl border border-gold/25 bg-[#10254b]/80 p-8 text-center"
+            >
+              <CheckCircle2 className="mx-auto text-gold" size={54} />
+              <p className="mt-4 font-display text-3xl text-goldSoft">
+                Esta respuesta ya fue registrada correctamente.
+              </p>
+            </motion.div>
+          ) : success ? (
             <motion.div
               key="success"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
               className="mx-auto mt-10 max-w-xl rounded-3xl border border-gold/25 bg-[#10254b]/80 p-8 text-center"
             >
               <CheckCircle2 className="mx-auto text-gold" size={54} />
-
               <p className="mt-4 font-display text-3xl text-goldSoft">
                 {weddingContent.rsvp.successMessage}
               </p>
-
-              <button
-                type="button"
-                className="secondary-button mt-6"
-                onClick={() => setSuccess(false)}
-              >
-                Registrar otra respuesta
-              </button>
             </motion.div>
           ) : (
             <motion.form
@@ -121,93 +129,89 @@ export default function RSVPSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               onSubmit={handleSubmit}
-              className="mx-auto mt-10 max-w-3xl space-y-4"
+              className="mx-auto mt-10 max-w-3xl space-y-5"
             >
-              <input
-                value={form.titular}
-                onChange={(e) => setField("titular", e.target.value)}
-                placeholder="Nombre del titular"
-                required
-              />
+              <div className="card-frame p-5 text-center">
+                <p className="text-sm uppercase tracking-[0.25em] text-goldSoft/75">
+                  Titular
+                </p>
+                <p className="mt-2 text-2xl text-white/95">
+                  {inviteData?.titular}
+                </p>
+              </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <label className="block text-sm text-white/75">
+                  Confirmación del titular
+                </label>
                 <select
-                  value={form.asiste}
-                  onChange={(e) => setField("asiste", e.target.value)}
+                  value={titularAsiste}
+                  onChange={(e) => setTitularAsiste(e.target.value)}
                 >
                   <option value="Sí">Sí asistiré</option>
                   <option value="No">No podré asistir</option>
                 </select>
-
-                <input
-                  value={form.telefono}
-                  onChange={(e) => setField("telefono", e.target.value)}
-                  placeholder="Teléfono"
-                />
               </div>
 
-              {form.asiste === "Sí" && (
-                <>
-                  <select
-                    value={form.tieneAcompanantes}
-                    onChange={(e) =>
-                      setField("tieneAcompanantes", e.target.value)
-                    }
-                  >
-                    <option value="No">No tendré acompañantes</option>
-                    <option value="Sí">Sí tendré acompañantes</option>
-                  </select>
+              {titularAsiste === "Sí" && acompanantes.length > 0 && (
+                <div className="space-y-4">
+                  <div className="card-frame p-5 text-center">
+                    <p className="text-sm uppercase tracking-[0.25em] text-goldSoft/75">
+                      Acompañantes asignados
+                    </p>
+                  </div>
 
-                  {form.tieneAcompanantes === "Sí" && (
-                    <>
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <select
-                          value={form.cantidadAcompanantes}
-                          onChange={(e) =>
-                            setField("cantidadAcompanantes", e.target.value)
-                          }
-                        >
-                          <option value={0}>Cantidad de acompañantes</option>
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                        </select>
-
-                        <select
-                          value={form.cantidadMenores}
-                          onChange={(e) =>
-                            setField("cantidadMenores", e.target.value)
-                          }
-                        >
-                          <option value={0}>Cantidad de menores</option>
-                          <option value={0}>0</option>
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                        </select>
-                      </div>
-
-                      {Array.from({ length: companionCount }).map((_, index) => {
-                        const key = `acompanante${index + 1}`;
-
-                        return (
-                          <input
-                            key={key}
-                            value={form[key]}
-                            onChange={(e) => setField(key, e.target.value)}
-                            placeholder={`Acompañante ${index + 1} — nombre y apellido`}
-                          />
-                        );
-                      })}
-                    </>
+                  {acompanantes[0] && (
+                    <div className="space-y-2">
+                      <label className="block text-sm text-white/75">
+                        {acompanantes[0]}
+                      </label>
+                      <select
+                        value={acomp1Asiste}
+                        onChange={(e) => setAcomp1Asiste(e.target.value)}
+                      >
+                        <option value="Sí">Sí asistirá</option>
+                        <option value="No">No asistirá</option>
+                      </select>
+                    </div>
                   )}
-                </>
+
+                  {acompanantes[1] && (
+                    <div className="space-y-2">
+                      <label className="block text-sm text-white/75">
+                        {acompanantes[1]}
+                      </label>
+                      <select
+                        value={acomp2Asiste}
+                        onChange={(e) => setAcomp2Asiste(e.target.value)}
+                      >
+                        <option value="Sí">Sí asistirá</option>
+                        <option value="No">No asistirá</option>
+                      </select>
+                    </div>
+                  )}
+
+                  {acompanantes[2] && (
+                    <div className="space-y-2">
+                      <label className="block text-sm text-white/75">
+                        {acompanantes[2]}
+                      </label>
+                      <select
+                        value={acomp3Asiste}
+                        onChange={(e) => setAcomp3Asiste(e.target.value)}
+                      >
+                        <option value="Sí">Sí asistirá</option>
+                        <option value="No">No asistirá</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
               )}
 
               <textarea
                 rows="4"
-                value={form.mensaje}
-                onChange={(e) => setField("mensaje", e.target.value)}
+                value={mensaje}
+                onChange={(e) => setMensaje(e.target.value)}
                 placeholder="Mensaje para los novios"
               />
 
@@ -216,7 +220,7 @@ export default function RSVPSection() {
                 disabled={sending}
                 className="gold-button w-full disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {sending ? "Enviando..." : "Enviar confirmación"}
+                {sending ? "Confirmando asistencia..." : "Enviar confirmación"}
               </button>
             </motion.form>
           )}

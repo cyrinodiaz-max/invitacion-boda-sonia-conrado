@@ -19,6 +19,10 @@ export default function App() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
+  const [inviteData, setInviteData] = useState(null);
+  const [inviteLoading, setInviteLoading] = useState(true);
+  const [inviteError, setInviteError] = useState("");
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -41,31 +45,62 @@ export default function App() {
     };
   }, []);
 
-const handleOpenInvitation = async () => {
-  const audio = audioRef.current;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
 
-  if (audio) {
-    try {
-      audio.pause();
-      audio.currentTime = 0;
-      audio.muted = false;
-      audio.volume = 0.85;
-
-      const playPromise = audio.play();
-
-      if (playPromise !== undefined) {
-        await playPromise;
-        setIsMusicPlaying(true);
-        setIsMuted(false);
-      }
-    } catch (error) {
-      console.error("No se pudo iniciar la música automáticamente:", error);
-      setIsMusicPlaying(false);
+    if (!id) {
+      setInviteError("Falta el identificador de la invitación.");
+      setInviteLoading(false);
+      return;
     }
-  }
 
-  setOpened(true);
-};
+    const loadInvite = async () => {
+      try {
+        const response = await fetch(`/api/invite?id=${encodeURIComponent(id)}`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "No se pudo cargar la invitación.");
+        }
+
+        setInviteData(result.invite);
+      } catch (error) {
+        console.error("Error al cargar invitación:", error);
+        setInviteError(error.message || "No se pudo cargar la invitación.");
+      } finally {
+        setInviteLoading(false);
+      }
+    };
+
+    loadInvite();
+  }, []);
+
+  const handleOpenInvitation = async () => {
+    const audio = audioRef.current;
+
+    if (audio) {
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.muted = false;
+        audio.volume = 0.85;
+
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+          await playPromise;
+          setIsMusicPlaying(true);
+          setIsMuted(false);
+        }
+      } catch (error) {
+        console.error("No se pudo iniciar la música automáticamente:", error);
+        setIsMusicPlaying(false);
+      }
+    }
+
+    setOpened(true);
+  };
 
   const handlePlayPauseMusic = async () => {
     if (!audioRef.current) return;
@@ -93,14 +128,14 @@ const handleOpenInvitation = async () => {
 
   return (
     <>
-<audio
-  ref={audioRef}
-  src="/audio/hasta-mi-final.mp3"
-  preload="auto"
-  playsInline
-  onPlay={() => setIsMusicPlaying(true)}
-  onPause={() => setIsMusicPlaying(false)}
-/>
+      <audio
+        ref={audioRef}
+        src="/audio/hasta-mi-final.mp3"
+        preload="auto"
+        playsInline
+        onPlay={() => setIsMusicPlaying(true)}
+        onPause={() => setIsMusicPlaying(false)}
+      />
 
       <StarField />
 
@@ -143,7 +178,13 @@ const handleOpenInvitation = async () => {
               </section>
 
               <DressCodeSection />
-              <RSVPSection />
+
+              <RSVPSection
+                inviteData={inviteData}
+                inviteLoading={inviteLoading}
+                inviteError={inviteError}
+              />
+
               <Footer />
             </motion.main>
           )}
