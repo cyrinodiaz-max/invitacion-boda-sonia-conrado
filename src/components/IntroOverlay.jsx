@@ -16,7 +16,11 @@ export default function IntroOverlay({ onOpen }) {
         <h1 className="mt-6 font-script text-6xl text-gold sm:text-8xl">
           {weddingContent.intro.names}
         </h1>
-        <button className="gold-button mt-10" onClick={onOpen}>
+        <button
+          type="button"
+          className="gold-button mt-10"
+          onClick={onOpen}
+        >
           {weddingContent.intro.cta}
         </button>
       </div>
