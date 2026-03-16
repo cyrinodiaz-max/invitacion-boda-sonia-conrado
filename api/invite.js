@@ -65,7 +65,7 @@ export default async function handler(req, res) {
 
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: "Invitados!A:G",
+      range: "Invitados!A:I",
     });
 
     const rows = response.data.values || [];
@@ -76,9 +76,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Saltamos encabezados
     const dataRows = rows.slice(1);
-
     const foundIndex = dataRows.findIndex((row) => normalize(row[0]) === id);
 
     if (foundIndex === -1) {
@@ -97,8 +95,10 @@ export default async function handler(req, res) {
         normalize(row[3]),
         normalize(row[4]),
         normalize(row[5]),
+        normalize(row[6]),
+        normalize(row[7]),
       ].filter(Boolean),
-      estado: normalize(row[6]) || "pendiente",
+      estado: normalize(row[8]) || "pendiente",
     };
 
     return res.status(200).json({

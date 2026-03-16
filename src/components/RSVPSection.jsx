@@ -15,6 +15,8 @@ export default function RSVPSection({
   const [acomp1Asiste, setAcomp1Asiste] = useState("Sí");
   const [acomp2Asiste, setAcomp2Asiste] = useState("Sí");
   const [acomp3Asiste, setAcomp3Asiste] = useState("Sí");
+  const [acomp4Asiste, setAcomp4Asiste] = useState("Sí");
+  const [acomp5Asiste, setAcomp5Asiste] = useState("Sí");
   const [mensaje, setMensaje] = useState("");
 
   const acompanantes = useMemo(() => {
@@ -35,6 +37,8 @@ export default function RSVPSection({
         acomp1_asiste: acompanantes[0] ? acomp1Asiste : "",
         acomp2_asiste: acompanantes[1] ? acomp2Asiste : "",
         acomp3_asiste: acompanantes[2] ? acomp3Asiste : "",
+        acomp4_asiste: acompanantes[3] ? acomp4Asiste : "",
+        acomp5_asiste: acompanantes[4] ? acomp5Asiste : "",
         mensaje,
       };
 
@@ -199,6 +203,36 @@ export default function RSVPSection({
                       <select
                         value={acomp3Asiste}
                         onChange={(e) => setAcomp3Asiste(e.target.value)}
+                      >
+                        <option value="Sí">Sí asistirá</option>
+                        <option value="No">No asistirá</option>
+                      </select>
+                    </div>
+                  )}
+
+                  {acompanantes[3] && (
+                    <div className="space-y-2">
+                      <label className="block text-sm text-white/75">
+                        {acompanantes[3]}
+                      </label>
+                      <select
+                        value={acomp4Asiste}
+                        onChange={(e) => setAcomp4Asiste(e.target.value)}
+                      >
+                        <option value="Sí">Sí asistirá</option>
+                        <option value="No">No asistirá</option>
+                      </select>
+                    </div>
+                  )}
+
+                  {acompanantes[4] && (
+                    <div className="space-y-2">
+                      <label className="block text-sm text-white/75">
+                        {acompanantes[4]}
+                      </label>
+                      <select
+                        value={acomp5Asiste}
+                        onChange={(e) => setAcomp5Asiste(e.target.value)}
                       >
                         <option value="Sí">Sí asistirá</option>
                         <option value="No">No asistirá</option>

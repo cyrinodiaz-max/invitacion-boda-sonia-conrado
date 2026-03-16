@@ -49,7 +49,8 @@ function normalize(value) {
 }
 
 function isYes(value) {
-  return normalize(value).toLowerCase() === "sí" || normalize(value).toLowerCase() === "si";
+  const v = normalize(value).toLowerCase();
+  return v === "sí" || v === "si";
 }
 
 export default async function handler(req, res) {
@@ -69,10 +70,10 @@ export default async function handler(req, res) {
       });
     }
 
-    // 1. Buscar al invitado en la hoja Invitados
+    // Leer invitados con 5 acompañantes + estado
     const inviteResponse = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: "Invitados!A:G",
+      range: "Invitados!A:I",
     });
 
     const rows = inviteResponse.data.values || [];
@@ -92,14 +93,16 @@ export default async function handler(req, res) {
       });
     }
 
-    const rowNumber = foundIndex + 2; // +1 por encabezados y +1 por índice base 1
+    const rowNumber = foundIndex + 2; // +2 por encabezado + índice base 1
     const inviteRow = dataRows[foundIndex];
 
     const titular = normalize(inviteRow[1]);
     const acompanante1 = normalize(inviteRow[3]);
     const acompanante2 = normalize(inviteRow[4]);
     const acompanante3 = normalize(inviteRow[5]);
-    const estadoActual = normalize(inviteRow[6]).toLowerCase();
+    const acompanante4 = normalize(inviteRow[6]);
+    const acompanante5 = normalize(inviteRow[7]);
+    const estadoActual = normalize(inviteRow[8]).toLowerCase();
 
     if (estadoActual === "respondido") {
       return res.status(409).json({
@@ -107,38 +110,44 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2. Leer respuestas del frontend
     const titularAsiste = normalize(data.titular_asiste);
     const acomp1Asiste = normalize(data.acomp1_asiste);
     const acomp2Asiste = normalize(data.acomp2_asiste);
     const acomp3Asiste = normalize(data.acomp3_asiste);
+    const acomp4Asiste = normalize(data.acomp4_asiste);
+    const acomp5Asiste = normalize(data.acomp5_asiste);
     const mensaje = normalize(data.mensaje);
 
     const totalAsistentes =
       (isYes(titularAsiste) ? 1 : 0) +
       (acompanante1 && isYes(acomp1Asiste) ? 1 : 0) +
       (acompanante2 && isYes(acomp2Asiste) ? 1 : 0) +
-      (acompanante3 && isYes(acomp3Asiste) ? 1 : 0);
+      (acompanante3 && isYes(acomp3Asiste) ? 1 : 0) +
+      (acompanante4 && isYes(acomp4Asiste) ? 1 : 0) +
+      (acompanante5 && isYes(acomp5Asiste) ? 1 : 0);
 
-    // 3. Guardar respuesta en la hoja Respuestas
     const responseRow = [
-      new Date().toISOString(), // fecha
-      id,
-      titular,
-      titularAsiste,
-      acompanante1,
-      acomp1Asiste,
-      acompanante2,
-      acomp2Asiste,
-      acompanante3,
-      acomp3Asiste,
-      mensaje,
-      totalAsistentes,
+      new Date().toISOString(), // A fecha
+      id,                       // B id
+      titular,                  // C titular
+      titularAsiste,            // D titular_asiste
+      acompanante1,             // E acompanante1
+      acomp1Asiste,             // F acomp1_asiste
+      acompanante2,             // G acompanante2
+      acomp2Asiste,             // H acomp2_asiste
+      acompanante3,             // I acompanante3
+      acomp3Asiste,             // J acomp3_asiste
+      acompanante4,             // K acompanante4
+      acomp4Asiste,             // L acomp4_asiste
+      acompanante5,             // M acompanante5
+      acomp5Asiste,             // N acomp5_asiste
+      mensaje,                  // O mensaje
+      totalAsistentes,          // P total_asistentes
     ];
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: "Respuestas!A:L",
+      range: "Respuestas!A:P",
       valueInputOption: "RAW",
       insertDataOption: "INSERT_ROWS",
       requestBody: {
@@ -146,10 +155,10 @@ export default async function handler(req, res) {
       },
     });
 
-    // 4. Marcar en Invitados como respondido
+    // Marcar invitado como respondido en columna I
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `Invitados!G${rowNumber}`,
+      range: `Invitados!I${rowNumber}`,
       valueInputOption: "RAW",
       requestBody: {
         values: [["respondido"]],

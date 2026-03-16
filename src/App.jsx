@@ -137,9 +137,11 @@ export default function App() {
         onPause={() => setIsMusicPlaying(false)}
       />
 
-      <StarField />
-
       <div className="min-h-screen bg-stars text-ink relative overflow-hidden">
+        <div className="sky-background-layer">
+          <StarField />
+        </div>
+
         <AnimatePresence mode="wait">
           {!opened && (
             <motion.div
@@ -147,7 +149,7 @@ export default function App() {
               initial={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 1.03, y: -18 }}
               transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-20"
+              className="relative z-30"
             >
               <IntroOverlay onOpen={handleOpenInvitation} />
             </motion.div>
@@ -161,7 +163,7 @@ export default function App() {
               initial={{ opacity: 0, y: 26, scale: 0.995 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-10"
+              className="relative z-20"
             >
               <Hero />
               <CountdownSection target={weddingContent.countdown.target} />

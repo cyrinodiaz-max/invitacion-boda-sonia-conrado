@@ -1,36 +1,73 @@
-const SMALL_STARS = 220;
-const MEDIUM_STARS = 90;
-const LARGE_STARS = 26;
-const CROSS_STARS = 12;
-const HERO_STARS = 3;
+const SMALL_STARS = 360;
+const MEDIUM_STARS = 170;
+const LARGE_STARS = 60;
+const CROSS_STARS = 18;
+const HERO_STARS = 6;
 
-function createCircleStars(count, minSize, maxSize, minOpacity, maxOpacity, minDuration, maxDuration, type = "circle") {
+function createStars(
+  count,
+  minSize,
+  maxSize,
+  minOpacity,
+  maxOpacity,
+  minDuration,
+  maxDuration,
+  type = "circle"
+) {
   return Array.from({ length: count }, (_, index) => ({
     id: `${type}-${index}`,
     type,
     top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
     size: `${Math.random() * (maxSize - minSize) + minSize}px`,
-    opacity: (Math.random() * (maxOpacity - minOpacity) + minOpacity).toFixed(2),
+    opacity: (
+      Math.random() * (maxOpacity - minOpacity) + minOpacity
+    ).toFixed(2),
     duration: `${Math.random() * (maxDuration - minDuration) + minDuration}s`,
     delay: `${Math.random() * 8}s`,
   }));
 }
 
-const smallStars = createCircleStars(220, 1.2, 2.2, 0.4, 0.72, 4, 8, "circle");
-const mediumStars = createCircleStars(90, 2.2, 3.8, 0.5, 0.82, 5, 9, "circle");
-const largeStars = createCircleStars(26, 3.8, 5.6, 0.62, 0.92, 6, 10, "circle");
-const crossStars = createCircleStars(12, 10, 18, 0.7, 1, 5, 9, "cross");
-const heroStars = createCircleStars(3, 22, 30, 0.9, 1, 6, 10, "hero");
-
-const stars = [...smallStars, ...mediumStars, ...largeStars, ...crossStars, ...heroStars];
+const stars = [
+  ...createStars(SMALL_STARS, 1.1, 2.1, 0.45, 0.78, 4, 8, "circle"),
+  ...createStars(MEDIUM_STARS, 2.2, 3.6, 0.55, 0.88, 5, 9, "circle"),
+  ...createStars(LARGE_STARS, 3.8, 5.6, 0.72, 1, 6, 10, "circle"),
+  ...createStars(CROSS_STARS, 10, 16, 0.85, 1, 6, 10, "cross"),
+  ...createStars(HERO_STARS, 16, 24, 0.92, 1, 6, 10, "hero"),
+];
 
 export default function StarField() {
   return (
     <div className="star-field" aria-hidden="true">
-      {stars.map((star) => {
-        if (star.type === "cross") {
-          return (
+      <div className="moon-wrap">
+        <div className="moon" />
+        <div className="moon-glow" />
+      </div>
+
+      <div className="star-layer star-layer-back">
+        {stars
+          .filter((star) => star.type === "circle")
+          .map((star) => (
+            <span
+              key={star.id}
+              className="star"
+              style={{
+                top: star.top,
+                left: star.left,
+                width: star.size,
+                height: star.size,
+                "--opacity": star.opacity,
+                "--duration": star.duration,
+                "--delay": star.delay,
+              }}
+            />
+          ))}
+      </div>
+
+      <div className="star-layer star-layer-front">
+        {stars
+          .filter((star) => star.type === "cross")
+          .map((star) => (
             <span
               key={star.id}
               className="star-cross"
@@ -44,11 +81,11 @@ export default function StarField() {
                 "--delay": star.delay,
               }}
             />
-          );
-        }
+          ))}
 
-        if (star.type === "hero") {
-          return (
+        {stars
+          .filter((star) => star.type === "hero")
+          .map((star) => (
             <span
               key={star.id}
               className="star-hero"
@@ -62,25 +99,8 @@ export default function StarField() {
                 "--delay": star.delay,
               }}
             />
-          );
-        }
-
-        return (
-          <span
-            key={star.id}
-            className="star"
-            style={{
-              top: star.top,
-              left: star.left,
-              width: star.size,
-              height: star.size,
-              "--opacity": star.opacity,
-              "--duration": star.duration,
-              "--delay": star.delay,
-            }}
-          />
-        );
-      })}
+          ))}
+      </div>
 
       <div className="star-glow star-glow-1" />
       <div className="star-glow star-glow-2" />

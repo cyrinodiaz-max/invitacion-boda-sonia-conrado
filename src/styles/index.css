@@ -4,22 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---------------- ROOT ---------------- */
-
 :root {
   color-scheme: dark;
 
   --bg-deep: #040b16;
-  --bg-mid: #0e1f3a;
-  --bg-glow: #254a82;
+  --bg-mid: #0a1f3f;
+  --bg-mid-2: #0c2348;
+  --bg-glow: #173766;
 
   --gold-soft: #d4af63;
   --gold-strong: #f0d18a;
 
   --text-soft: #f8f4ec;
-}
+  --text-muted: rgba(248, 244, 236, 0.72);
 
-/* ---------------- GLOBAL ---------------- */
+  --card-bg: rgba(10, 31, 63, 0.74);
+  --card-bg-strong: rgba(10, 31, 63, 0.82);
+  --card-border: rgba(212, 175, 99, 0.30);
+
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.28);
+  --shadow-gold:
+    0 0 0 1px rgba(216, 179, 106, 0.10),
+    0 18px 50px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
 
 html {
   scroll-behavior: smooth;
@@ -30,30 +38,15 @@ body {
   font-family: "Lora", serif;
   color: var(--text-soft);
   background:
-    radial-gradient(circle at 20% 20%, rgba(212, 175, 99, 0.12), transparent 18%),
-    radial-gradient(circle at 80% 15%, rgba(255, 255, 255, 0.1), transparent 20%),
-    radial-gradient(circle at 50% 40%, rgba(37, 74, 130, 0.3), transparent 38%),
-    linear-gradient(180deg, #102a4f 0%, #081a34 42%, #040b16 100%);
+    radial-gradient(circle at 18% 18%, rgba(255, 245, 220, 0.08), transparent 16%),
+    radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.08), transparent 16%),
+    radial-gradient(circle at 50% 20%, rgba(212, 175, 99, 0.10), transparent 24%),
+    radial-gradient(circle at 50% 60%, rgba(23, 55, 102, 0.18), transparent 34%),
+    linear-gradient(180deg, #07162f 0%, #071a35 28%, #06142a 58%, #040b16 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Cormorant Garamond", serif;
-}
-
-.font-script {
-  font-family: "Great Vibes", cursive;
-}
-
-.font-body {
-  font-family: "Lora", serif;
-}
-
-/* ---------------- STAR BACKGROUND ---------------- */
 
 body::before,
 body::after {
@@ -61,248 +54,227 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: -2;
 }
 
 body::before {
   background:
-    radial-gradient(circle at 15% 18%, rgba(255, 255, 255, 0.14), transparent 16%),
-    radial-gradient(circle at 50% 12%, rgba(216, 179, 106, 0.18), transparent 24%),
-    radial-gradient(circle at 84% 22%, rgba(255, 255, 255, 0.12), transparent 16%),
-    radial-gradient(circle at 70% 70%, rgba(255, 235, 180, 0.08), transparent 20%);
+    radial-gradient(circle at 12% 20%, rgba(255,255,255,0.07), transparent 18%),
+    radial-gradient(circle at 52% 14%, rgba(216,179,106,0.12), transparent 20%),
+    radial-gradient(circle at 86% 24%, rgba(255,255,255,0.06), transparent 16%);
+  opacity: 0.9;
 }
 
 body::after {
   background-image:
-    radial-gradient(circle at 10% 22%, rgba(255,255,255,0.65) 0 1.4px, transparent 2.2px),
-    radial-gradient(circle at 16% 40%, rgba(255,255,255,0.5) 0 1.2px, transparent 2px),
-    radial-gradient(circle at 22% 74%, rgba(255,255,255,0.55) 0 1.3px, transparent 2.1px),
-    radial-gradient(circle at 34% 32%, rgba(255,255,255,0.42) 0 1.1px, transparent 2px),
-    radial-gradient(circle at 48% 18%, rgba(255,255,255,0.58) 0 1.4px, transparent 2.2px),
-    radial-gradient(circle at 56% 62%, rgba(255,255,255,0.45) 0 1.2px, transparent 2px),
-    radial-gradient(circle at 68% 18%, rgba(255,255,255,0.62) 0 1.4px, transparent 2.3px),
-    radial-gradient(circle at 78% 58%, rgba(255,255,255,0.48) 0 1.2px, transparent 2px),
-    radial-gradient(circle at 88% 24%, rgba(255,255,255,0.58) 0 1.4px, transparent 2.1px),
-    radial-gradient(circle at 92% 48%, rgba(216,179,106,0.55) 0 1.8px, transparent 2.6px);
-  opacity: 0.9;
+    radial-gradient(circle at 10% 22%, rgba(255,255,255,0.38) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 22% 76%, rgba(255,255,255,0.34) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 36% 38%, rgba(255,255,255,0.28) 0 1.1px, transparent 2px),
+    radial-gradient(circle at 62% 18%, rgba(255,255,255,0.32) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 78% 58%, rgba(255,255,255,0.30) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 92% 36%, rgba(216,179,106,0.28) 0 1.3px, transparent 2.2px);
+  opacity: 0.38;
 }
 
-/* ---------------- STAR FIELD ---------------- */
-.star-field {
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  margin: 0;
+}
+
+.couple-script {
+  font-family: "Great Vibes", cursive;
+}
+
+.bg-stars {
+  position: relative;
+  z-index: 1;
+}
+.intro-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 11, 22, 0.18) 0%,
+      rgba(4, 11, 22, 0.08) 35%,
+      rgba(4, 11, 22, 0.14) 100%
+    );
+  pointer-events: none;
+}
+
+.sky-background-layer {
   position: fixed;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
   z-index: 0;
+  background: transparent;
 }
 
-.star {
-  position: absolute;
-  border-radius: 9999px;
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 248, 230, 0.96) 42%,
-      rgba(255, 226, 160, 0.62) 70%,
-      transparent 100%
-    );
-  opacity: var(--opacity, 0.75);
-  box-shadow:
-    0 0 6px rgba(255, 255, 255, 0.85),
-    0 0 14px rgba(255, 239, 196, 0.32);
-  animation: twinkleStrong var(--duration, 5s) ease-in-out infinite;
-  animation-delay: var(--delay, 0s);
+/* =========================================================
+   LAYOUT BASE
+   ========================================================= */
+
+.section-shell {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1280px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
-.star-cross,
-.star-hero {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  opacity: var(--opacity, 0.95);
-  animation: crossTwinkle var(--duration, 6s) ease-in-out infinite;
-  animation-delay: var(--delay, 0s);
+.section-spacing {
+  margin-top: 3rem;
 }
 
-.star-cross::before,
-.star-cross::after,
-.star-hero::before,
-.star-hero::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 250, 235, 0.9) 20%,
-    rgba(255, 224, 150, 1) 50%,
-    rgba(255, 250, 235, 0.9) 80%,
-    rgba(255, 255, 255, 0) 100%
-  );
+.section-shell > .card-frame,
+.section-shell > .cinematic-card,
+.section-shell > .section-card {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.star-cross::before {
-  width: 2px;
-  height: 100%;
-  box-shadow: 0 0 10px rgba(255, 230, 160, 0.45);
+.section-card {
+  width: min(100%, 980px);
+  padding: 2.75rem 2rem;
 }
-
-.star-cross::after {
-  width: 100%;
-  height: 2px;
-  box-shadow: 0 0 10px rgba(255, 230, 160, 0.45);
-}
-
-.star-hero::before {
-  width: 3px;
-  height: 100%;
-  box-shadow:
-    0 0 12px rgba(255, 255, 255, 0.85),
-    0 0 22px rgba(255, 226, 160, 0.55);
-}
-
-.star-hero::after {
-  width: 100%;
-  height: 3px;
-  box-shadow:
-    0 0 12px rgba(255, 255, 255, 0.85),
-    0 0 22px rgba(255, 226, 160, 0.55);
-}
-
-.star-hero {
-  filter: drop-shadow(0 0 12px rgba(255, 236, 180, 0.45));
-}
-
-@keyframes twinkleStrong {
-  0%, 100% {
-    opacity: var(--opacity, 0.75);
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  50% {
-    opacity: calc(var(--opacity, 0.75) + 0.18);
-    transform: scale(1.3);
-    filter: brightness(1.18);
-  }
-}
-
-@keyframes crossTwinkle {
-  0%, 100% {
-    opacity: var(--opacity, 0.95);
-    transform: translate(-50%, -50%) scale(1);
-    filter: brightness(1);
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.12);
-    filter: brightness(1.25);
-  }
-}
-
-.star-glow {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  opacity: 0.18;
-  animation: driftGlow 18s ease-in-out infinite alternate;
-}
-
-.star-glow-1 {
-  top: 8%;
-  left: 10%;
-  width: 260px;
-  height: 260px;
-  background: rgba(212, 175, 99, 0.14);
-}
-
-.star-glow-2 {
-  top: 20%;
-  right: 9%;
-  width: 220px;
-  height: 220px;
-  background: rgba(116, 153, 214, 0.14);
-}
-
-.star-glow-3 {
-  bottom: 10%;
-  left: 30%;
-  width: 300px;
-  height: 300px;
-  background: rgba(255, 241, 200, 0.08);
-}
-
-.star-glow-4 {
-  bottom: 6%;
-  right: 18%;
-  width: 250px;
-  height: 250px;
-  background: rgba(212, 175, 99, 0.1);
-}
-
-@keyframes driftGlow {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  100% {
-    transform: translate3d(18px, -12px, 0) scale(1.08);
-  }
-}
-/* ---------------- CARD ---------------- */
 
 .card-frame {
   position: relative;
   z-index: 2;
-  @apply rounded-[28px] border border-gold/35 backdrop-blur-xl;
-  background: rgba(13, 31, 63, 0.78);
-  box-shadow:
-    0 0 0 1px rgba(216, 179, 106, 0.12),
-    0 20px 55px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  width: 100%;
+  border-radius: 28px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-gold);
 }
 
 .cinematic-card {
   position: relative;
   z-index: 2;
-  border: 1px solid rgba(212, 175, 99, 0.34);
+  width: 100%;
+  border-radius: 28px;
+  border: 1px solid rgba(212, 175, 99, 0.28);
   background: linear-gradient(
     180deg,
-    rgba(11, 27, 56, 0.82),
-    rgba(8, 22, 46, 0.72)
+    rgba(9, 22, 46, 0.76),
+    rgba(8, 20, 40, 0.66)
   );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   box-shadow:
-    0 16px 38px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(10px);
+    0 14px 34px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255,255,255,0.035);
 }
 
-/* ---------------- BUTTONS ---------------- */
+.gold-button,
+.secondary-button {
+  appearance: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: "Lora", serif;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
 
 .gold-button {
-  @apply inline-flex items-center justify-center rounded-full border border-gold/70 px-6 py-3 font-medium text-navy transition;
-  background: var(--gold-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0.9rem 1.7rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 99, 0.62);
+  background: linear-gradient(180deg, #ecd08b 0%, #e0c57a 100%);
+  color: #0a1f3f;
+  font-size: 1rem;
+  font-weight: 600;
   box-shadow:
-    0 8px 20px rgba(216, 179, 106, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    0 6px 20px rgba(212, 175, 99, 0.18),
+    0 0 0 1px rgba(255,255,255,0.06) inset;
 }
 
 .gold-button:hover {
   transform: translateY(-2px);
+  box-shadow:
+    0 10px 24px rgba(212, 175, 99, 0.30),
+    0 0 0 1px rgba(255,255,255,0.06) inset;
 }
 
 .secondary-button {
-  @apply inline-flex items-center justify-center rounded-full border border-gold/45 px-5 py-2.5 font-medium text-goldSoft transition;
-  background: rgba(16, 37, 70, 0.7);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.8rem 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 99, 0.42);
+  background: rgba(255,255,255,0.02);
+  color: var(--gold-soft);
+  font-size: 0.98rem;
+  font-weight: 500;
 }
 
 .secondary-button:hover {
-  background: rgba(22, 49, 92, 0.8);
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.05);
 }
 
-/* ---------------- DIVIDER ---------------- */
+.gold-button:disabled,
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 22px;
+  border: 1px solid rgba(212, 175, 99, 0.22);
+  background: rgba(15, 34, 68, 0.92);
+  color: var(--text-soft);
+  padding: 0.95rem 1rem;
+  outline: none;
+  font-family: "Lora", serif;
+  font-size: 1rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255,255,255,0.38);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(212, 175, 99, 0.7);
+  box-shadow: 0 0 0 3px rgba(212, 175, 99, 0.14);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
 
 .star-divider {
   position: relative;
@@ -310,11 +282,11 @@ body::after {
 
 .star-divider::before,
 .star-divider::after {
-  content: '✦';
+  content: "✦";
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(216, 179, 106, 0.7);
+  color: rgba(216, 179, 106, 0.72);
 }
 
 .star-divider::before {
@@ -325,256 +297,31 @@ body::after {
   right: -1.5rem;
 }
 
-/* ---------------- FORM ---------------- */
-
-input,
-select,
-textarea {
-  @apply w-full rounded-2xl border border-gold/30 px-4 py-3 text-ink outline-none transition placeholder:text-white/40 focus:border-gold focus:ring-2 focus:ring-gold/25;
-  background: rgba(16, 37, 70, 0.88);
-  letter-spacing: 0.01em;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 4px 14px rgba(0, 0, 0, 0.14);
-}
-
-input:hover,
-select:hover,
-textarea:hover {
-  border-color: rgba(216, 179, 106, 0.45);
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.42);
-}
-
-select {
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(216, 179, 106, 0.9) 50%),
-    linear-gradient(135deg, rgba(216, 179, 106, 0.9) 50%, transparent 50%);
-  background-position:
-    calc(100% - 22px) calc(50% - 2px),
-    calc(100% - 16px) calc(50% - 2px);
-  background-size: 6px 6px, 6px 6px;
-  background-repeat: no-repeat;
-  padding-right: 3rem;
-}
-/* ===== Ajuste fino de proporciones y separación ===== */
-
-.section-spacing {
-  margin-top: 2.75rem;
-}
-
-.section-card {
-  padding: 2.75rem 2rem;
-}
-
-.countdown-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin-top: 2.25rem;
-}
-
-.countdown-card {
-  min-height: 132px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem 1rem;
-}
-
-.event-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
-}
-
-.event-card {
-  min-height: 340px;
-  padding: 2.75rem 2rem;
-}
-
-@media (max-width: 1024px) {
-  .countdown-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .event-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .countdown-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section-card,
-  .countdown-card,
-  .event-card {
-    padding: 1.75rem 1.25rem;
-  }
-
-  .event-card {
-    min-height: auto;
-  }
-}
 /* =========================================================
-   CORRECCIÓN FINAL DE PROPORCIONES Y RESPIRACIÓN VISUAL
-   Pegar al final del archivo CSS
+   HERO
    ========================================================= */
 
-.section-shell {
-  position: relative;
-  z-index: 2;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 3.5rem;
-  padding-bottom: 3.5rem;
+.hero-soft-spacing {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
-
-/* Todas las tarjetas principales dejan de ocupar todo el ancho */
-.section-shell > .card-frame,
-.section-shell > .cinematic-card {
-  width: min(100%, 980px) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Contenedor del countdown más estrecho y con separación real */
-.countdown-grid {
-  width: min(100%, 980px);
-  margin: 2.25rem auto 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.35rem;
-}
-
-.countdown-grid > * {
-  min-height: 126px;
-}
-
-/* Eventos en tarjetas independientes y centradas */
-.event-grid {
-  width: min(100%, 1180px);
-  margin: 2rem auto 0 auto;
-  display: flex !important;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.75rem;
-}
-
-.event-grid > * {
-  flex: 0 1 560px;
-  max-width: 560px;
-  width: 100%;
-}
-
-/* Tarjeta de evento más contenida */
-.event-card {
-  min-height: 340px;
-  padding: 2.5rem 2rem;
-}
-
-/* Paneles generales: ya no tipo franja, sino bloque elegante */
-.section-card {
-  width: min(100%, 960px) !important;
-  padding: 2.75rem 2rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Tarjetas más transparentes para ver mejor las estrellas detrás */
-.card-frame {
-  background: rgba(10, 28, 58, 0.68) !important;
-  backdrop-filter: blur(10px);
-  border-color: rgba(212, 175, 99, 0.32) !important;
-  box-shadow:
-    0 0 0 1px rgba(216, 179, 106, 0.10),
-    0 18px 45px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-.cinematic-card {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 28, 58, 0.70),
-    rgba(8, 22, 46, 0.60)
-  ) !important;
-  border-color: rgba(212, 175, 99, 0.30) !important;
-  box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
-}
-
-/* Más aire entre grandes secciones */
-.section-spacing {
-  margin-top: 3rem !important;
-}
-
-/* RSVP más contenido y elegante si usa card-frame o cinematic-card */
-.section-shell form,
-.section-shell .rsvp-panel,
-.section-shell .rsvp-card {
-  width: min(100%, 920px);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .countdown-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .event-grid {
-    width: min(100%, 900px);
-  }
-
-  .event-grid > * {
-    flex: 0 1 100%;
-    max-width: 760px;
-  }
-}
-
-@media (max-width: 640px) {
-  .countdown-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section-card,
-  .event-card,
-  .countdown-grid > * {
-    padding: 1.75rem 1.25rem;
-  }
-
-  .section-shell {
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
-  }
-}
-/* ===== Ajuste visual premium final ===== */
 
 .hero-glow {
   position: absolute;
-  inset: auto 50% auto auto;
-  transform: translateX(50%);
-  top: 6.5rem;
-  width: 320px;
-  height: 320px;
+  top: 6.2rem;
+  left: 50%;
+  width: 340px;
+  height: 340px;
+  transform: translateX(-50%);
   border-radius: 9999px;
   background: radial-gradient(
     circle,
-    rgba(240, 209, 138, 0.16) 0%,
-    rgba(240, 209, 138, 0.08) 38%,
-    rgba(255, 255, 255, 0.02) 62%,
+    rgba(240, 209, 138, 0.18) 0%,
+    rgba(240, 209, 138, 0.09) 38%,
+    rgba(255,255,255,0.02) 62%,
     transparent 100%
   );
-  filter: blur(36px);
+  filter: blur(38px);
   pointer-events: none;
   z-index: 0;
 }
@@ -610,64 +357,360 @@ select {
     0 0 28px rgba(255, 255, 255, 0.04);
 }
 
-.hero-soft-spacing {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+/* =========================================================
+   COUNTDOWN / EVENTS
+   ========================================================= */
+
+.countdown-grid {
+  width: min(100%, 980px);
+  margin: 2.25rem auto 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.35rem;
 }
 
-@media (max-width: 640px) {
-  .hero-glow {
-    top: 5.2rem;
-    width: 220px;
-    height: 220px;
-    filter: blur(28px);
-  }
+.countdown-card {
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
 
-  .hero-divider {
-    width: 90px;
+.event-grid {
+  width: min(100%, 1180px);
+  margin: 2rem auto 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.75rem;
+}
+
+.event-grid > * {
+  flex: 0 1 560px;
+  max-width: 560px;
+  width: 100%;
+}
+
+.event-card {
+  min-height: 340px;
+  padding: 2.5rem 2rem;
+}
+
+/* =========================================================
+   CIELO NOCTURNO DEFINITIVO
+   ========================================================= */
+
+.star-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.star-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star-layer-back {
+  z-index: 1;
+}
+
+.star-layer-front {
+  z-index: 2;
+}
+
+.star {
+  position: absolute;
+  border-radius: 9999px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 248, 230, 0.96) 42%,
+      rgba(255, 226, 160, 0.72) 70%,
+      transparent 100%
+    );
+  opacity: var(--opacity, 0.78);
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.95),
+    0 0 16px rgba(255, 239, 196, 0.42);
+  animation: twinkleStrong var(--duration, 5s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.star-cross,
+.star-hero {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  opacity: var(--opacity, 0.95);
+  animation: crossTwinkle var(--duration, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.star-cross::before,
+.star-cross::after,
+.star-hero::before,
+.star-hero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 250, 235, 0.95) 20%,
+    rgba(255, 224, 150, 1) 50%,
+    rgba(255, 250, 235, 0.95) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.star-cross::before {
+  width: 2px;
+  height: 100%;
+  box-shadow: 0 0 12px rgba(255, 230, 160, 0.55);
+}
+
+.star-cross::after {
+  width: 100%;
+  height: 2px;
+  box-shadow: 0 0 12px rgba(255, 230, 160, 0.55);
+}
+
+.star-hero::before {
+  width: 3px;
+  height: 100%;
+  box-shadow:
+    0 0 14px rgba(255, 255, 255, 0.95),
+    0 0 26px rgba(255, 226, 160, 0.65);
+}
+
+.star-hero::after {
+  width: 100%;
+  height: 3px;
+  box-shadow:
+    0 0 14px rgba(255, 255, 255, 0.95),
+    0 0 26px rgba(255, 226, 160, 0.65);
+}
+
+.star-hero {
+  filter: drop-shadow(0 0 14px rgba(255, 236, 180, 0.55));
+}
+
+@keyframes twinkleStrong {
+  0%, 100% {
+    opacity: var(--opacity, 0.8);
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    opacity: calc(var(--opacity, 0.8) + 0.18);
+    transform: scale(1.35);
+    filter: brightness(1.22);
   }
 }
-/* ===== Estrella fugaz visible y elegante ===== */
+
+@keyframes crossTwinkle {
+  0%, 100% {
+    opacity: var(--opacity, 0.95);
+    transform: translate(-50%, -50%) scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.14);
+    filter: brightness(1.28);
+  }
+}
+
+.star-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(95px);
+  opacity: 0.2;
+  animation: driftGlow 18s ease-in-out infinite alternate;
+}
+
+.star-glow-1 {
+  top: 6%;
+  left: 6%;
+  width: 280px;
+  height: 280px;
+  background: rgba(212, 175, 99, 0.12);
+}
+
+.star-glow-2 {
+  top: 16%;
+  right: 6%;
+  width: 260px;
+  height: 260px;
+  background: rgba(116, 153, 214, 0.12);
+}
+
+.star-glow-3 {
+  bottom: 8%;
+  left: 26%;
+  width: 320px;
+  height: 320px;
+  background: rgba(255, 241, 200, 0.08);
+}
+
+.star-glow-4 {
+  bottom: 6%;
+  right: 14%;
+  width: 280px;
+  height: 280px;
+  background: rgba(212, 175, 99, 0.08);
+}
+
+@keyframes driftGlow {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(18px, -12px, 0) scale(1.08);
+  }
+}
+
+/* ===== LUNA MEJORADA Y MÁS REALISTA ===== */
+
+.moon-wrap {
+  position: absolute;
+  top: 5.5%;
+  right: 5.5%;
+  width: 185px;
+  height: 185px;
+  z-index: 3;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.moon {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at 30% 28%, rgba(252, 252, 248, 0.96) 0%, rgba(239, 239, 234, 0.95) 24%, rgba(216, 216, 212, 0.94) 52%, rgba(188, 190, 194, 0.95) 78%, rgba(158, 162, 168, 0.96) 100%);
+
+  box-shadow:
+    inset -18px -22px 38px rgba(105, 110, 118, 0.22),
+    inset 12px 10px 22px rgba(255, 255, 255, 0.16),
+    0 0 36px rgba(255, 255, 255, 0.16),
+    0 0 90px rgba(255, 248, 220, 0.10);
+}
+
+/* capa de textura lunar realista */
+.moon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0.78;
+  mix-blend-mode: multiply;
+
+  background:
+    radial-gradient(circle at 28% 24%, rgba(120, 124, 130, 0.14) 0 7px, transparent 8px),
+    radial-gradient(circle at 36% 38%, rgba(110, 114, 120, 0.18) 0 10px, transparent 11px),
+    radial-gradient(circle at 52% 30%, rgba(115, 118, 124, 0.12) 0 6px, transparent 7px),
+    radial-gradient(circle at 61% 48%, rgba(104, 108, 114, 0.16) 0 11px, transparent 12px),
+    radial-gradient(circle at 46% 58%, rgba(100, 104, 110, 0.15) 0 8px, transparent 9px),
+    radial-gradient(circle at 30% 68%, rgba(108, 112, 118, 0.14) 0 9px, transparent 10px),
+    radial-gradient(circle at 68% 24%, rgba(96, 100, 106, 0.12) 0 5px, transparent 6px),
+    radial-gradient(circle at 72% 66%, rgba(108, 112, 118, 0.16) 0 7px, transparent 8px),
+    radial-gradient(circle at 18% 54%, rgba(114, 118, 124, 0.10) 0 5px, transparent 6px),
+    radial-gradient(circle at 56% 78%, rgba(106, 110, 116, 0.12) 0 6px, transparent 7px);
+}
+
+/* modelado de luz/sombra y relieve */
+.moon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,0.22) 0%, transparent 34%),
+    radial-gradient(circle at 78% 50%, rgba(55, 60, 68, 0.22) 0%, transparent 46%),
+    radial-gradient(circle at 62% 84%, rgba(70, 74, 82, 0.10) 0%, transparent 32%),
+    linear-gradient(115deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 34%, rgba(60,64,72,0.14) 100%);
+}
+
+.moon-glow {
+  position: absolute;
+  inset: -52px;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 252, 234, 0.16) 0%,
+      rgba(255, 252, 234, 0.10) 28%,
+      rgba(255, 255, 255, 0.05) 46%,
+      transparent 72%
+    );
+  filter: blur(34px);
+  animation: moonGlow 11s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+  0%, 100% {
+    opacity: 0.78;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.96;
+    transform: scale(1.035);
+  }
+}
+
+/* ===== Estrella fugaz ===== */
 
 .shooting-star {
   position: absolute;
-  top: 16%;
-  left: -28%;
-  width: 280px;
-  height: 4px;
+  top: 14%;
+  left: -32%;
+  width: 300px;
+  height: 3px;
   opacity: 0;
   pointer-events: none;
-  z-index: 0;
-  transform: rotate(-16deg);
+  z-index: 4;
+  transform: rotate(-14deg);
   transform-origin: left center;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
     rgba(255, 255, 255, 0.18) 16%,
-    rgba(255, 255, 255, 0.45) 36%,
-    rgba(255, 255, 255, 0.9) 72%,
+    rgba(255, 255, 255, 0.5) 36%,
+    rgba(255, 255, 255, 0.95) 72%,
     rgba(255, 255, 255, 1) 100%
   );
   box-shadow:
-    0 0 8px rgba(255, 255, 255, 0.8),
-    0 0 18px rgba(255, 255, 255, 0.45),
-    0 0 30px rgba(255, 255, 255, 0.22);
-  animation: shootingStarSweep 9s linear infinite;
+    0 0 10px rgba(255, 255, 255, 0.95),
+    0 0 22px rgba(255, 255, 255, 0.55),
+    0 0 36px rgba(255, 255, 255, 0.28);
+  animation: shootingStarSweep 9.5s linear infinite;
 }
 
 .shooting-star::before {
   content: "";
   position: absolute;
-  left: -120px;
+  left: -160px;
   top: 50%;
-  width: 120px;
+  width: 160px;
   height: 2px;
   transform: translateY(-50%);
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.18) 45%,
-    rgba(255, 255, 255, 0.4) 100%
+    rgba(255, 255, 255, 0.18) 40%,
+    rgba(255, 255, 255, 0.42) 100%
   );
   filter: blur(1px);
 }
@@ -675,45 +718,123 @@ select {
 .shooting-star::after {
   content: "";
   position: absolute;
-  right: -4px;
+  right: -5px;
   top: 50%;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   border-radius: 9999px;
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 1);
   box-shadow:
-    0 0 10px rgba(255, 255, 255, 1),
-    0 0 22px rgba(255, 255, 255, 0.55),
-    0 0 36px rgba(255, 255, 255, 0.24);
+    0 0 12px rgba(255, 255, 255, 1),
+    0 0 24px rgba(255, 255, 255, 0.62),
+    0 0 40px rgba(255, 255, 255, 0.30);
 }
 
 @keyframes shootingStarSweep {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(-16deg);
+    transform: translate3d(0, 0, 0) rotate(-14deg);
   }
-
-  8% {
-    opacity: 0;
-  }
-
   10% {
-    opacity: 1;
-  }
-
-  16% {
-    opacity: 1;
-    transform: translate3d(150vw, 42vh, 0) rotate(-16deg);
-  }
-
-  18% {
     opacity: 0;
-    transform: translate3d(155vw, 44vh, 0) rotate(-16deg);
   }
-
+  12% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 1;
+    transform: translate3d(165vw, 46vh, 0) rotate(-14deg);
+  }
+  22% {
+    opacity: 0;
+    transform: translate3d(170vw, 48vh, 0) rotate(-14deg);
+  }
   100% {
     opacity: 0;
-    transform: translate3d(155vw, 44vh, 0) rotate(-16deg);
+    transform: translate3d(170vw, 48vh, 0) rotate(-14deg);
+  }
+}
+
+/* =========================================================
+   RSVP / FORMS
+   ========================================================= */
+
+.section-shell form,
+.section-shell .rsvp-panel,
+.section-shell .rsvp-card {
+  width: min(100%, 920px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .countdown-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .event-grid {
+    width: min(100%, 900px);
+  }
+
+  .event-grid > * {
+    flex: 0 1 100%;
+    max-width: 760px;
+  }
+}
+
+@media (max-width: 768px) {
+  .moon-wrap {
+    width: 140px;
+    height: 140px;
+    top: 6%;
+    right: 4%;
+  }
+
+  .shooting-star {
+    width: 220px;
+  }
+
+  .hero-glow {
+    width: 240px;
+    height: 240px;
+    top: 5.4rem;
+    filter: blur(28px);
+  }
+}
+
+@media (max-width: 640px) {
+  .section-shell {
+    padding-top: 2.4rem;
+    padding-bottom: 2.4rem;
+  }
+
+  .countdown-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-card,
+  .countdown-card,
+  .event-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .hero-divider {
+    width: 90px;
+  }
+
+  .moon-wrap {
+    width: 110px;
+    height: 110px;
+    top: 6%;
+    right: 3%;
+  }
+
+  .event-card {
+    min-height: auto;
   }
 }
