@@ -578,18 +578,19 @@ textarea {
   }
 }
 
-/* ===== LUNA MEJORADA Y MÁS REALISTA ===== */
+/* ===== LUNA CRECIENTE ELEGANTE ===== */
 
 .moon-wrap {
   position: absolute;
-  top: 5.5%;
-  right: 5.5%;
-  width: 185px;
-  height: 185px;
+  top: 5%;
+  right: 5%;
+  width: 190px;
+  height: 190px;
   z-index: 3;
-  opacity: 1;
   pointer-events: none;
 }
+
+/* disco lunar */
 
 .moon {
   position: absolute;
@@ -598,78 +599,64 @@ textarea {
   overflow: hidden;
 
   background:
-    radial-gradient(circle at 30% 28%, rgba(252, 252, 248, 0.96) 0%, rgba(239, 239, 234, 0.95) 24%, rgba(216, 216, 212, 0.94) 52%, rgba(188, 190, 194, 0.95) 78%, rgba(158, 162, 168, 0.96) 100%);
+    radial-gradient(circle at 38% 35%,
+      rgba(255,255,255,0.96) 0%,
+      rgba(242,242,238,0.96) 28%,
+      rgba(220,222,226,0.95) 60%,
+      rgba(180,184,190,0.95) 100%
+    );
 
   box-shadow:
-    inset -18px -22px 38px rgba(105, 110, 118, 0.22),
-    inset 12px 10px 22px rgba(255, 255, 255, 0.16),
-    0 0 36px rgba(255, 255, 255, 0.16),
-    0 0 90px rgba(255, 248, 220, 0.10);
+    0 0 20px rgba(255,255,255,0.35),
+    0 0 60px rgba(255,245,200,0.20);
 }
 
-/* capa de textura lunar realista */
+/* máscara que genera el creciente */
+
 .moon::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  opacity: 0.78;
-  mix-blend-mode: multiply;
-
-  background:
-    radial-gradient(circle at 28% 24%, rgba(120, 124, 130, 0.14) 0 7px, transparent 8px),
-    radial-gradient(circle at 36% 38%, rgba(110, 114, 120, 0.18) 0 10px, transparent 11px),
-    radial-gradient(circle at 52% 30%, rgba(115, 118, 124, 0.12) 0 6px, transparent 7px),
-    radial-gradient(circle at 61% 48%, rgba(104, 108, 114, 0.16) 0 11px, transparent 12px),
-    radial-gradient(circle at 46% 58%, rgba(100, 104, 110, 0.15) 0 8px, transparent 9px),
-    radial-gradient(circle at 30% 68%, rgba(108, 112, 118, 0.14) 0 9px, transparent 10px),
-    radial-gradient(circle at 68% 24%, rgba(96, 100, 106, 0.12) 0 5px, transparent 6px),
-    radial-gradient(circle at 72% 66%, rgba(108, 112, 118, 0.16) 0 7px, transparent 8px),
-    radial-gradient(circle at 18% 54%, rgba(114, 118, 124, 0.10) 0 5px, transparent 6px),
-    radial-gradient(circle at 56% 78%, rgba(106, 110, 116, 0.12) 0 6px, transparent 7px);
+  background: #06142a;
+  transform: translateX(-38%);
 }
 
-/* modelado de luz/sombra y relieve */
+/* textura lunar muy suave */
+
 .moon::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
 
   background:
-    radial-gradient(circle at 18% 18%, rgba(255,255,255,0.22) 0%, transparent 34%),
-    radial-gradient(circle at 78% 50%, rgba(55, 60, 68, 0.22) 0%, transparent 46%),
-    radial-gradient(circle at 62% 84%, rgba(70, 74, 82, 0.10) 0%, transparent 32%),
-    linear-gradient(115deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 34%, rgba(60,64,72,0.14) 100%);
+    radial-gradient(circle at 36% 42%, rgba(110,110,110,0.25) 0 5px, transparent 6px),
+    radial-gradient(circle at 52% 58%, rgba(100,100,100,0.22) 0 4px, transparent 5px),
+    radial-gradient(circle at 66% 34%, rgba(120,120,120,0.18) 0 3px, transparent 4px),
+    radial-gradient(circle at 46% 72%, rgba(110,110,110,0.18) 0 4px, transparent 5px);
 }
+
+/* halo luminoso lunar */
 
 .moon-glow {
   position: absolute;
-  inset: -52px;
+  inset: -60px;
   border-radius: 50%;
+
   background:
     radial-gradient(
       circle,
-      rgba(255, 252, 234, 0.16) 0%,
-      rgba(255, 252, 234, 0.10) 28%,
-      rgba(255, 255, 255, 0.05) 46%,
-      transparent 72%
+      rgba(255,252,230,0.30) 0%,
+      rgba(255,252,230,0.14) 35%,
+      rgba(255,255,255,0.06) 55%,
+      transparent 75%
     );
-  filter: blur(34px);
-  animation: moonGlow 11s ease-in-out infinite;
-}
 
-@keyframes moonGlow {
-  0%, 100% {
-    opacity: 0.78;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.96;
-    transform: scale(1.035);
-  }
+  filter: blur(35px);
 }
-
 /* ===== Estrella fugaz ===== */
 
 .shooting-star {
